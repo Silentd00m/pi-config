@@ -1,0 +1,14 @@
+domains:
+  - path: .
+    permissions:
+      read: allow
+      write: allow
+      edit: allow
+      find: allow
+      grep: allow
+      ls: allow
+  - path: ~/.pi
+    permissions:
+      read: allow
+      write: ask
+      edit: ask

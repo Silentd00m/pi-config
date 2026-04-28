@@ -1,0 +1,78 @@
+{
+  "lastChangelogVersion": "0.70.2",
+  "defaultProvider": "external",
+  "defaultModel": "Qwen3.6-27B-UD-Q5_K_XL",
+  "toolMode": "auto",
+  "tools": {
+    "bash": {
+      "enabled": true,
+      "allowRead": true,
+      "allowWrite": true
+    },
+    "searxng_search": "allow",
+    "crawl4ai_md": "allow",
+    "crawl4ai_crawl": "allow",
+    "crawl4ai_html": "allow",
+    "crawl4ai_screenshot": "allow",
+    "crawl4ai_pdf": "allow",
+    "crawl4ai_execute_js": "allow",
+    "crawl4ai_ask": "allow",
+    "fetch_fetch": "allow",
+    "memory_store": "allow",
+    "memory_retrieve": "allow",
+    "time_get_current_time": "allow",
+    "sequential-thinking_sequentialthinking": "allow"
+  },
+  "guard": {
+    "enabled": false,
+    "matchers": {
+      "spawn": {
+        "param": "agent",
+        "type": "exact"
+      },
+      "webfetch": {
+        "param": "url",
+        "type": "glob"
+      }
+    },
+    "rules": {
+      "skill": "allow",
+      "bash": {
+        "*": "ask",
+        "git status": "allow",
+        "git log": "allow",
+        "rm": "deny"
+      },
+      "read": {
+        "*": "ask",
+        "~/.pi/**": "allow",
+        "./**": "allow",
+        "*.env": "deny",
+        "*.pem": "deny"
+      },
+      "write": {
+        "*": "ask",
+        "./**": "allow"
+      },
+      "edit": {
+        "*": "ask",
+        "./**": "allow"
+      },
+      "spawn": {
+        "*": "deny",
+        "build": "allow",
+        "test": "allow"
+      },
+      "webfetch": {
+        "*": "ask",
+        "https://github.com/*": "allow"
+      }
+    }
+  },
+  "packages": [
+    "npm:@kaiserlich-dev/pi-session-search",
+    "npm:pi-skill-smart-read"
+  ],
+  "enableInstallTelemetry": false,
+  "treeFilterMode": "default"
+}

@@ -1,0 +1,93 @@
+# Changelog
+
+All notable changes to `@juicesharp/rpiv-ask-user-question` are documented here.
+
+Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
+Versioning: [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [0.13.0] - 2026-04-28
+
+### Added
+- Multi-question dialogs with a tab bar (`Tab` to switch).
+- Preview pane: side-by-side or stacked, with per-option notes (`n` to add notes).
+- Multi-select questions: checkboxes, `Space` to toggle, `Next` sentinel, Enter-as-toggle on rows, toggles persisted across tab switches.
+- Submit tab with answer review and a Submit picker; warns about unanswered questions.
+- Chat row available on every tab.
+- Schema: `questions[]`, per-option `preview`, per-option `notes`.
+
+### Changed
+- Preview pane hidden entirely when no option carries a preview.
+- Continuous numbering across options and the chat row.
+- Controls hint reworked per tab (Space/n/Tab hints shown only when relevant).
+
+### Fixed
+- Dialog height stable across tab switches (Submit tab no longer collapses).
+- Enter on a single multi-select question now submits.
+- DOWN on the chat row exits to options (was a one-way trap).
+- No doubled cursor when chat or notes are focused on multi-select tabs.
+- Preview height cap matches the actual layout (side-by-side vs stacked).
+- `package.json` `files` array now ships every published module.
+
+## [0.12.7] - 2026-04-26
+
+### Fixed
+- Inline "Other" free-text input now clips to terminal width, preventing crashes on narrow terminals (e.g. Arch + Ghostty) where the row could overflow by a column or two and trip pi's safety check.
+
+## [0.12.6] - 2026-04-26
+
+## [0.12.5] - 2026-04-24
+
+## [0.12.4] - 2026-04-24
+
+## [0.12.3] - 2026-04-24
+
+## [0.12.2] - 2026-04-24
+
+## [0.12.1] - 2026-04-24
+
+## [0.12.0] - 2026-04-24
+
+## [0.11.7] - 2026-04-23
+
+## [0.11.6] - 2026-04-22
+
+## [0.11.5] - 2026-04-22
+
+## [0.11.4] - 2026-04-21
+
+## [0.11.3] - 2026-04-21
+
+## [0.11.2] - 2026-04-21
+
+## [0.11.1] - 2026-04-20
+
+## [0.11.0] - 2026-04-20
+
+### Added
+- `dispatchQuestionInput(index, item, ctx)` extracted from the selector's `keyBinding` handler and `buildDialogContainer(mainItems, ctx, initialIndex, onKey)` exported so the dispatch matrix (edit / skip / finalize / single-select / multi-select toggle+Enter) and dialog wiring can be unit-tested directly. Bodies and TUI semantics unchanged — additive `export` only.
+
+## [0.10.0] - 2026-04-20
+
+### Added
+- Five pure helpers are now exported from `ask-user-question.ts` for direct unit testing: `buildMainItems`, `itemAt`, `wrapIndex`, `buildResponse`, `buildToolResult`. Signatures and bodies unchanged — additive `export` keyword only.
+
+## [0.9.1] - 2026-04-20
+
+## [0.9.0] - 2026-04-19
+
+## [0.8.3] - 2026-04-19
+
+## [0.8.2] - 2026-04-19
+
+## [0.8.1] - 2026-04-19
+
+## [0.8.0] - 2026-04-19
+
+## [0.7.0] - 2026-04-18
+
+## [0.6.1] - 2026-04-18
+
+## [0.6.0] — 2026-04-18
+
+### Changed
+- Consolidated into the `juicesharp/rpiv-mono` monorepo. Version aligned to the rpiv-pi family lockstep starting point. No runtime behavior change from `0.1.4`.

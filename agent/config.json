@@ -1,0 +1,4 @@
+{
+  "defaultModel": "qwen3.5-9b-FLM",
+  "reasoningModel": "deepseek-r1-0528-8b-FLM"
+}

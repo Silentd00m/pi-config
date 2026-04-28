@@ -1,0 +1,3 @@
+[submodule "agent/extensions/pi-lens"]
+	path = agent/extensions/pi-lens
+	url = https://github.com/apmantza/pi-lens
