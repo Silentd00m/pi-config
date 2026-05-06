@@ -1,50 +1,56 @@
 ---
 name: plan-runner
-description: >
-  Use this skill when a PLAN.md file exists in the repository, or when the
-  user asks to create a plan, work through a plan, continue a plan, or
-  execute tasks from a list. Also use it when the user says "what's next"
-  or "keep going" and there is a PLAN.md present.
+description: Run and manage a task plan via plan tools. Usewhen the user asks to work through a plan, continue a plan, or execute tasks from a list. Also use when the user says "what's next" or "keep going" and there is a PLAN.md present.
 ---
 
-# Plan Runner
+## Available Tools
 
-## If PLAN.md does not exist
+| Tool                | Purpose                                                            |
+| ------------------- | ------------------------------------------------------------------ |
+| `plan_start`        | Mark plan as actively running (sets `.pi/plan-running` flag)       |
+| `plan_progress`     | Update status bar with `(done/total) task name`                    |
+| `plan_general`      | Get summary: total/done/remaining/failed/progress %                |
+| `plan_sections`     | List all tasks grouped by section with status: `[ ]`, `[x]`, `[!]` |
+| `plan_get_section`  | Get tasks of a specific section by 1-indexed number                |
+| `plan_next_section` | **Primary entry point** — find the next section with open tasks    |
+| `plan_mark_done`    | Mark a task as done by section title and task text                 |
+| `plan_pause`        | Pause: clear running flag, show idle status bar                    |
+| `plan_done`         | Mark complete: clear flag, clear status bar                        |
 
-Ask the user to describe the work. Then create PLAN.md with one task per
-line in this format:
+## Starting Work
+
+1. Call `plan_start` to mark the plan as actively running.
+2. Call `plan_next_section` to find the next section with open tasks.
+3. The tool returns the section title and all its tasks with their status.
+4. Pick the first unchecked task (`[ ]`) from that section.
+5. Call `plan_progress` with `taskName` (short description of what you're about to do).
+6. Tell the user which task you are starting.
+7. Complete the task.
+8. Call `plan_mark_done` with the `section_title` and `task` text to mark it as done.
+9. Repeat from step 2 until all tasks are done or the user says to stop.
+
+After each task, briefly report what was done before moving to the next.
+
+## Creating a New Plan
+
+If the user wants to create a new plan:
+
+1. Ask the user to describe the work.
+2. Create PLAN.md with one task per line:
 
 ```markdown
 # Plan
 
-- [ ] First task description
-- [ ] Second task description
-- [ ] Third task description
+## Section Title
+
+- [ ] Task one
+- [ ] Task two
 ```
 
-Show the plan to the user and ask for confirmation before doing any work.
+3. Tell the user the plan is ready and ask if they want to start working on it.
 
-## If PLAN.md exists
+## Pausing
 
-1. Read PLAN.md
-2. Find the first unchecked item (`- [ ]`)
-3. Tell the user which task you are starting
-4. Complete the task
-5. Mark it done by replacing `- [ ]` with `- [x]` in PLAN.md
-6. Repeat from step 2 until all items are checked or the user says to stop
+If the session ends before all tasks are done, or the user asks to stop:
 
-After each task, briefly report what was done before moving to the next.
-
-## Gotchas
-
-- Edit PLAN.md to mark items done immediately after finishing each task,
-  not at the end of all tasks. This way the file always reflects current
-  progress if the session is interrupted.
-- Do not skip items or reorder them unless the user explicitly asks.
-- If a task is ambiguous, ask for clarification before starting it — not
-  halfway through.
-- If a task fails, mark it with `- [!]` and note the reason inline, then
-  ask the user whether to continue with the next task, retry or stop.
-- Call `plan_start` before working on the first task
-- Call `plan_done` after marking the last task `[x]`
-- If the .pi folder does not exist, create it befor calling /plan_start.
+1. Call `plan_pause` to save state and show idle progress in the status bar.
