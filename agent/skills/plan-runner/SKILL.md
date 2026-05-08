@@ -1,6 +1,6 @@
 ---
 name: plan-runner
-description: Run and manage a task plan via plan tools. Usewhen the user asks to work through a plan, continue a plan, or execute tasks from a list. Also use when the user says "what's next" or "keep going" and there is a PLAN.md present.
+description: Run and manage a task plan via plan tools. Use when the user asks to work through a plan, continue a plan, or execute tasks from a list. Also use when the user says "what's next" or "keep going" and there is a PLAN.md present.
 ---
 
 ## Available Tools
@@ -19,15 +19,16 @@ description: Run and manage a task plan via plan tools. Usewhen the user asks to
 
 ## Starting Work
 
-1. Call `plan_start` to mark the plan as actively running.
-2. Call `plan_next_section` to find the next section with open tasks.
-3. The tool returns the section title and all its tasks with their status.
+0. Call `plan_start` to mark the plan as actively running.
+1. Call `plan_next_section` to find the next section with open tasks.
+2. The tool returns the section title and all its tasks with their status.
+3. **Find relevant skills for the current task.** Inspect the task descriptions for domain signals (e.g., code, tests, Rust, Python, security, design, docs) and load any skills that match those domains before proceeding.
 4. Pick the first unchecked task (`[ ]`) from that section.
 5. Call `plan_progress` with `taskName` (short description of what you're about to do).
 6. Tell the user which task you are starting.
 7. Complete the task.
 8. Call `plan_mark_done` with the `section_title` and `task` text to mark it as done.
-9. Repeat from step 2 until all tasks are done or the user says to stop.
+9. Repeat from step 1 until all tasks are done or the user says to stop.
 
 After each task, briefly report what was done before moving to the next.
 

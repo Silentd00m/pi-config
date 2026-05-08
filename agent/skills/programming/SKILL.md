@@ -41,6 +41,8 @@ interface document and the tests exist.
 
 Identify the language, then read its reference file before running any commands:
 
+- Go → [references/go.md](references/go.md) 
+- Puppet → [references/puppet.md](references/puppet.md) 
 - Rust → [references/rust.md](references/rust.md)
 - Python → [references/python.md](references/python.md)
 

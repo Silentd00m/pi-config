@@ -1,6 +1,6 @@
 # Python Reference
 
-## Pre-commit workflow
+## Workflow
 
 Run these steps in order. All must pass cleanly before declaring a task done.
 If a step fails, fix it and re-run before moving on.
