@@ -119,6 +119,39 @@ preserve exception chains when translating errors across abstraction boundaries.
 Reserve `assert` for internal invariants, not input validation — assertions are
 stripped with `-O`.
 
+See also: [Error handling patterns](python-errors.md)
+
+---
+
+## Package management — uv
+
+Use `uv` as the modern replacement for `pip` / `pip-compile` / `venv`.
+
+```bash
+# Install uv
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Create a project (generates pyproject.toml + uv.lock)
+uv init myproject
+
+# Add a dependency
+uv add requests
+uv add --dev pytest
+
+# Run a command in the virtual environment
+uv run pytest
+
+# Sync the environment from the lock file
+uv sync
+
+# Update all dependencies
+uv lock
+uv sync
+```
+
+`uv` manages virtual environments automatically. Never create `.venv` manually.
+Always commit `uv.lock` to version control.
+
 ---
 
 ## Dependency auditing — pip-audit

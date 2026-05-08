@@ -165,6 +165,8 @@ reason. Use `fmt.Errorf("context: %w", err)` to wrap errors and preserve the
 chain. Use `errors.Is` / `errors.As` to inspect wrapped errors; never compare
 error strings.
 
+See also: [Error handling patterns](go-errors.md)
+
 For library code, define typed sentinel errors with `errors.New` at package
 level. For complex error hierarchies, define custom types that implement the
 `error` interface.

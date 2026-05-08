@@ -20,7 +20,7 @@ description: >
    - **Overwrite:** Replace the entire file with the new plan.
    - **New File:** Create a separate file (e.g., `PLAN-v2.md` or
      `PLAN-feature.md`).
-   If no `PLAN.md` exists, skip to step 3.
+     If no `PLAN.md` exists, skip to step 3.
 3. **Initiate:** Ask the user for the high-level goal or description of the
    new work.
 4. **Questioning Phase:** Ask targeted questions to clarify scope, constraints,
@@ -32,7 +32,8 @@ description: >
    - If integrating, show how new tasks will be inserted relative to existing ones.
    - Summarize key assumptions if the user was brief.
 6. **Review:** Ask the user for feedback. Add, remove, reorder, or refine tasks
-   based on their input.
+   based on their input. After two revision rounds, write the plan and move on
+   unless the user explicitly asks for more changes.
 7. **Finalize:** When the user confirms, write the plan to the agreed-upon file.
 
 ## Questioning Guidelines
@@ -49,8 +50,8 @@ Ask about:
   prior tasks?
 - **Priorities:** What is the most critical outcome? What can be deprioritized?
 
-*Tip: If the user provides a detailed description, you may skip some questions
-and proceed to drafting, but always confirm critical assumptions.*
+_Tip: If the user provides a detailed description, you may skip some questions
+and proceed to drafting, but always confirm critical assumptions._
 
 ## Plan Format
 

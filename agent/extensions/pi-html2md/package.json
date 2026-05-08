@@ -1,0 +1,36 @@
+{
+  "name": "pi-html2md",
+  "version": "1.0.0",
+  "description": "Pi extension + CLI that converts HTML documentation to clean Markdown",
+  "type": "module",
+  "main": "dist/extension.js",
+  "bin": {
+    "html2md": "dist/cli.js"
+  },
+  "exports": {
+    ".": "./dist/extension.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "rehype-parse": "^9.0.0",
+    "rehype-remark": "^10.0.0",
+    "remark-gfm": "^4.0.0",
+    "remark-stringify": "^11.0.0",
+    "unified": "^11.0.0"
+  },
+  "peerDependencies": {
+    "@mariozechner/pi-coding-agent": ">=0.51.0"
+  },
+  "devDependencies": {
+    "@mariozechner/pi-coding-agent": "latest",
+    "@sinclair/typebox": "^0.34.0",
+    "@types/node": "^22.0.0",
+    "typescript": "^5.5.0"
+  }
+}

@@ -7,11 +7,11 @@ If a step fails, fix it and re-run before moving on.
 
 - [ ] Step 1 — Format: `cargo fmt --check`
 - [ ] Step 2 — Lint: `cargo clippy --all-targets --all-features -- -D warnings`
-- [ ] Step 3 — Type check: *(built into the compiler, surface via clippy/build)*
+- [ ] Step 3 — Type check: _(built into the compiler, surface via clippy/build)_
 - [ ] Step 4 — Security: `cargo deny check` and `cargo audit`
 - [ ] Step 5 — Test: `cargo test`
 - [ ] Step 6 — Doctests: `cargo test --doc`
-- [ ] Step 7 — UB / fuzz: *only if `rust-toolchain.toml` specifies nightly — see [Nightly-only tools](#nightly-only-tools) below*
+- [ ] Step 7 — UB / fuzz: _only if `rust-toolchain.toml` specifies nightly — see [Nightly-only tools](#nightly-only-tools) below_
 
 ## Commands
 
@@ -51,7 +51,7 @@ why directly above the attribute.
 Every public function must use `///` doc comments and include an `# Examples`
 section that `cargo test --doc` can run.
 
-```rust
+````rust
 /// Adds two numbers together.
 ///
 /// # Arguments
@@ -70,7 +70,7 @@ section that `cargo test --doc` can run.
 pub fn add(left: usize, right: usize) -> usize {
     left + right
 }
-```
+````
 
 ---
 
@@ -105,6 +105,8 @@ mod tests {
 Use `?` in fallible functions. Use `thiserror` for library error types, `anyhow`
 for binaries and application code. Reserve `expect()` for cases where a panic is
 genuinely correct — always pass a message explaining the assumed invariant.
+
+See also: [Error handling patterns](rust-errors.md)
 
 ---
 

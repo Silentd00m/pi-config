@@ -31,4 +31,12 @@ description: Store, retrieve, and manage project knowledge via the knowledge gra
 - **Use active voice for relations** — `"AuthModule implements JWT validation"` not `"JWT validation is implemented by AuthModule"`.
 - **Store actionable facts as observations** — decisions, constraints, user preferences, known bugs.
 - **Don't store ephemeral state** — things that only matter for the current task don't need to persist.
+
+| ✅ Store                          | ❌ Don't store                   |
+| --------------------------------- | -------------------------------- |
+| User prefers tabs over spaces     | Current file being edited        |
+| AuthModule uses JWT RS256         | Which task is next in plan       |
+| API returns 429 after 100 req/min | Temp variable value              |
+| Build requires `--features ssl`   | Intermediate plan revision state |
+
 - **Search before creating** — check if an entity already exists before creating a duplicate.
