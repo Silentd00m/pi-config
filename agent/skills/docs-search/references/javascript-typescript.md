@@ -50,17 +50,17 @@ the `@types` directory and the project's own declaration files:
 
 ```bash
 # Index all @types packages (third-party type definitions)
-qi index node_modules/@types --name js-types
+qi index node_modules/@types          # name auto-generated from path
 
 # Re-index after npm install
-qi index node_modules/@types --name js-types
+qi index node_modules/@types          # name auto-generated from path
 ```
 
-Then search:
+Then search (use `qi list` to find the collection name):
 
 ```bash
-qi search "async iterator protocol" -c js-types -n 5
-qi search "ReadableStream controller" -c js-types -n 5
+qi search "async iterator protocol" -c <collection> -n 5
+qi search "ReadableStream controller" -c <collection> -n 5
 ```
 
 For packages that bundle their own types (not in `@types`), index them
@@ -112,7 +112,7 @@ or documentation information.
 ## Workflow
 
 1. Know the package, need type/signature → find and read `index.d.ts`
-2. Searching across installed packages → `qi search "<term>" -c js-types`
+2. Searching across installed packages → `qi search "<term>" -c <collection>`
 3. Node.js stdlib → `qi search "<term>" -c nodejs`
 4. Browser/Web APIs → `qi search "<term>" -c mdn`
 5. Collection not indexed → follow Dash workflow in main skill

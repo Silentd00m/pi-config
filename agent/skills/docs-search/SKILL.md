@@ -20,20 +20,49 @@ produces hallucinated APIs.
 
 ---
 
+## Prerequisites
+
+### qi binary location
+
+qi is installed via `go install` and lives at `~/go/bin/qi`. It may not be
+in your PATH — always use the full path `~/go/bin/qi` when calling it from
+bash, or add `~/go/bin` to your PATH.
+
+### First-time setup
+
+Before using qi, initialize the config and database:
+
+```bash
+qi init                                    # creates config + database
+```
+
+This creates:
+
+- `~/.config/qi/config.yaml` — configuration
+- `~/.local/share/qi/qi.db` — SQLite database
+
+Run `qi doctor` to verify the setup:
+
+```bash
+qi doctor                                  # health check
+```
+
+---
+
 ## Step 1 — Try the native tool
 
 Load the reference file for the current language and follow it. Each file
 documents the native lookup and search tools available for that language,
 and when to fall through to qi.
 
-| Language | Reference file |
-|---|---|
-| Rust | `references/rust.md` |
-| Go | `references/go.md` |
-| Python | `references/python.md` |
+| Language                | Reference file                        |
+| ----------------------- | ------------------------------------- |
+| Rust                    | `references/rust.md`                  |
+| Go                      | `references/go.md`                    |
+| Python                  | `references/python.md`                |
 | JavaScript / TypeScript | `references/javascript-typescript.md` |
-| Bash / shell | `references/bash.md` |
-| Puppet | `references/puppet.md` |
+| Bash / shell            | `references/bash.md`                  |
+| Puppet                  | `references/puppet.md`                |
 
 Load with: `/skill_read path=docs-search/references/<language>.md`
 
@@ -50,19 +79,25 @@ docs, third-party libraries, language reference prose).
 ### Quick reference
 
 ```bash
-qi list                                   # list all indexed collections
-qi search "query" -c <collection>         # BM25 search
-qi search "query" -c <collection> -n 5   # limit results
-qi ask "question" -c <collection>         # LLM Q&A with citations (needs provider)
-qi get <doc-id> -c <collection>           # retrieve full document by ID
-qi stats -c <collection>                  # collection size / index health
-qi index <path> --name <collection>       # index or re-index a directory
+qi list                                    # list all indexed collections
+qi search "query" -c <collection>          # BM25 search
+qi search "query" -c <collection> -n 5     # limit results
+qi query "query" --mode hybrid -c <collection>  # hybrid (BM25 + vector)
+qi ask "question" -c <collection>          # LLM Q&A with citations (needs provider)
+qi get <doc-id>                            # retrieve full document by ID
+qi stats                                   # collection size / index health
+qi index <path>                            # index a directory (name auto-generated)
+qi index <collection>                      # re-index an existing collection
 ```
+
+**Collection naming**: Collection names are auto-generated from directory
+paths. For example `/home/alice/docs` becomes `home-alice-docs`. Use `qi list`
+to find the actual collection name after indexing.
 
 ### Known collections
 
 | Language / Library | Collection name | Docset source           |
-|--------------------|-----------------|-------------------------|
+| ------------------ | --------------- | ----------------------- |
 | Python (stdlib)    | `python`        | Dash-User-Contributions |
 | Node.js stdlib     | `nodejs`        | Dash-User-Contributions |
 | MDN Web APIs       | `mdn`           | Dash-User-Contributions |
@@ -94,17 +129,16 @@ tar -xzf .qi-staging/$NAME/${NAME}.tgz -C .qi-staging/$NAME/
 DOCS_DIR=$(find .qi-staging/$NAME -type d -name "Documents" | head -1)
 ```
 
-Convert each HTML file to Markdown using the `html2md` tool — once per file:
+Convert all HTML files to Markdown using `html2md` with `recursive: true` and `output: ".docs/"`:
 
 ```
-for each .html file under $DOCS_DIR:
-  html2md({ path: "<file>.html", output: "<file>.md" })
+html2md({ file: "$DOCS_DIR", recursive: true, output: ".docs/" })
 ```
 
-Then index:
+This writes the combined markdown to `.docs/converted.md` instead of outputting to the terminal. Then index:
 
 ```bash
-qi index "$DOCS_DIR" --name <collection>
+qi index "$DOCS_DIR"                       # name auto-generated from path
 ```
 
 ### Step 2b — Fall back to official documentation
@@ -113,7 +147,7 @@ Use crawl4ai to scrape the official documentation. Save each page as a `.md`
 file into `.qi-staging/<collection>/`, then index:
 
 ```bash
-qi index ./.qi-staging/<collection> --name <collection>
+qi index ./.qi-staging/<collection>        # name auto-generated from path
 ```
 
 Add `.qi-staging/` to `.gitignore` — it is a build artefact, not source.
@@ -133,15 +167,21 @@ Reach for docs-search when:
 
 ## Gotchas
 
+**qi binary is at `~/go/bin/qi`**, not in PATH by default. Always use the
+full path in bash commands.
+
 **Dash-User-Contributions tarballs for popular languages may be absent.**
 Once a docset moves to Kapeli's CDN it is removed from the repo. If the curl
 404s, use Step 2b.
 
-**qi collection names are case-sensitive.** Standardise on lowercase to avoid
-accidental duplicates.
+**qi collection names are auto-generated from paths.** Use `qi list` to
+find the actual name. Names use hyphens between path components.
 
 **Large docsets take 1–2 minutes to index.** One-time cost; re-indexes of
 unchanged files are fast.
 
-**Re-index stale collections** with `qi index <original-path> --name <collection>`.
-qi is content-addressable so re-indexing only processes changed files.
+**Re-index stale collections** with `qi index <collection>`. qi is
+content-addressable so re-indexing only processes changed files.
+
+**`qi get` and `qi stats` have no `-c` flag.** They operate across all
+collections or use context from the query.

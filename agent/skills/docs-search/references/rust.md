@@ -29,38 +29,35 @@ comments, and trait implementations.
 ## Search — qi over `target/doc/`
 
 Index the generated documentation into qi for BM25 search. Convert HTML to
-Markdown first using `html2md`, then index:
+Markdown first using `html2md` with `recursive: true` and `output: ".docs/"`, then index:
 
 ```
-for each .html file under target/doc:
-  html2md({ path: "<file>.html", output: "<file>.md" })
+html2md({ file: "target/doc", recursive: true, output: ".docs/" })
 ```
 
 ```bash
-qi index target/doc --name rust-project
+qi index target/doc                    # name auto-generated from path
 ```
 
 Or scope to a single crate:
 
-```
-for each .html file under target/doc/<crate_name>:
-  html2md({ path: "<file>.html", output: "<file>.md" })
-```
+````
+html2md({ file: "target/doc/<crate_name>", recursive: true, output: ".docs/" })
 
 ```bash
-qi index target/doc/<crate_name> --name <crate_name>
-```
+qi index target/doc/<crate_name>       # name auto-generated from path
+````
 
-Then search:
+Then search (use `qi list` to find the auto-generated collection name):
 
 ```bash
-qi search "trait object dynamic dispatch" -c rust-project -n 5
-qi search "async stream poll" -c rust-project -n 5
+qi search "trait object dynamic dispatch" -c <collection> -n 5
+qi search "async stream poll" -c <collection> -n 5
 ```
 
-Use a project-specific collection name (e.g. `rust-project`) rather than
-`rust` to avoid colliding with a generic stdlib collection and to reflect that
-the docs cover the exact dependency versions in use.
+Use a project-specific collection name rather than `rust` to avoid colliding
+with a generic stdlib collection and to reflect that the docs cover the exact
+dependency versions in use.
 
 Re-run `cargo doc` and re-index whenever dependencies change.
 
@@ -83,6 +80,6 @@ qi search "Iterator flat_map" -c rust -n 5
 ## Workflow
 
 1. Know the crate and symbol → `find target/doc -name "<symbol>*.html"` then read the file
-2. Searching project deps → `qi search "<term>" -c rust-project` (after indexing)
+2. Searching project deps → `qi search "<term>" -c <collection>` (after indexing)
 3. Searching stdlib only → `qi search "<term>" -c rust`
 4. Collections not indexed → follow Dash workflow in main skill

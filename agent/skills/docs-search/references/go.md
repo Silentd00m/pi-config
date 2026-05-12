@@ -59,10 +59,10 @@ go list std | while read pkg; do
   safe=$(echo "$pkg" | tr '/' '_')
   go doc -all "$pkg" > ".qi-staging/go/${safe}.md" 2>/dev/null
 done
-qi index .qi-staging/go --name go
+qi index .qi-staging/go              # name auto-generated from path
 ```
 
-Then search normally:
+Then search:
 
 ```bash
 qi search "sort slice custom comparator" -c go -n 5

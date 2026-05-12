@@ -1,0 +1,11 @@
+{
+  "name": "html2md",
+  "version": "1.0.0",
+  "description": "Convert HTML files to Markdown",
+  "dependencies": {
+    "turndown": "^7.1.2"
+  },
+  "pi": {
+    "extensions": ["./index.ts"]
+  }
+}
