@@ -64,8 +64,7 @@ export default function (pi: ExtensionAPI) {
 			"Convert an HTML file to Markdown format and return the result. Use this when the user asks to convert, parse, or extract content from HTML files.",
 		promptSnippet: "Convert HTML files to Markdown format",
 		promptGuidelines: [
-			"Use html2md when the user wants to convert an HTML file to Markdown.",
-			"Use html2md to extract readable text from HTML without manually parsing tags.",
+			"Use html2md to convert HTML files to Markdown and extract readable text without manually parsing tags.",
 		],
 		parameters: Type.Object({
 			file: Type.String({
