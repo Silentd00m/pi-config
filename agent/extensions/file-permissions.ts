@@ -1,4 +1,5 @@
 import { execSync } from "node:child_process";
+import { writeFileSync } from "node:fs";
 import { readFile, realpath } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -648,23 +649,23 @@ function buildToolDescription(
 	return `${baseDesc} Allowed paths: ${paths}. All other paths are denied.`;
 }
 
-function createPromptGuidelines(
-	toolName: GuardedToolName,
-	rules: PermissionRules,
-): string[] {
-	const allowed = rules.domains.filter((d) => {
-		const a = d.permissions.get(toolName);
-		return a === "allow" || a === "ask";
-	});
-	const guidelines = [
-		`Only use this tool on paths allowed by ${configLabel(rules)}.`,
+function buildSharedGuidelines(rules: PermissionRules): string[] {
+	const allAllowed = rules.domains
+		.flatMap((d) =>
+			["read", "write", "edit", "find", "grep", "ls"].map((tool) => {
+				const perm = d.permissions.get(tool);
+				return perm === "allow" || perm === "ask" ? domainLabel(d) : null;
+			}),
+		)
+		.filter(Boolean) as string[];
+
+	const guidelines: string[] = [
+		`read, write, edit, find, grep, and ls are only allowed on paths in ${configLabel(rules)}.`,
 		"If blocked by permissions, stop and explain the restriction.",
 		"Never use bash or another tool as a workaround for a denied path.",
 	];
-	if (allowed.length > 0) {
-		guidelines.push(
-			`Allowed: ${allowed.map((d) => domainLabel(d)).join(", ")}`,
-		);
+	if (allAllowed.length > 0) {
+		guidelines.push(`Allowed: ${[...new Set(allAllowed)].join(", ")}`);
 	}
 	return guidelines;
 }
@@ -696,6 +697,7 @@ function registerScopedOverrides(
 		promptSnippet:
 			"Run bash commands inside a bubblewrap sandbox with restricted home directory.",
 		promptGuidelines: [
+			...buildSharedGuidelines(rules),
 			"Do not call find, grep, rg, ls, tree, fd, ag, ack, or locate from bash — use the dedicated tools.",
 			"Filesystem access outside permitted paths will fail at the kernel level.",
 			"$HOME is empty and read-only inside the sandbox — do not attempt to read or write home directory files.",
@@ -717,7 +719,6 @@ function registerScopedOverrides(
 		...readTool,
 		description: buildToolDescription("Read file contents.", "read", rules),
 		promptSnippet: `Read file contents only on permitted paths from ${configLabel(rules)}.`,
-		promptGuidelines: createPromptGuidelines("read", rules),
 	});
 
 	pi.registerTool({
@@ -728,7 +729,6 @@ function registerScopedOverrides(
 			rules,
 		),
 		promptSnippet: `Create or overwrite files only on permitted paths from ${configLabel(rules)}.`,
-		promptGuidelines: createPromptGuidelines("write", rules),
 	});
 
 	pi.registerTool({
@@ -739,7 +739,6 @@ function registerScopedOverrides(
 			rules,
 		),
 		promptSnippet: `Edit files only on permitted paths from ${configLabel(rules)}.`,
-		promptGuidelines: createPromptGuidelines("edit", rules),
 	});
 
 	pi.registerTool({
@@ -750,7 +749,6 @@ function registerScopedOverrides(
 			rules,
 		),
 		promptSnippet: `Find filenames only inside permitted paths from ${configLabel(rules)}.`,
-		promptGuidelines: createPromptGuidelines("find", rules),
 	});
 
 	pi.registerTool({
@@ -761,14 +759,12 @@ function registerScopedOverrides(
 			rules,
 		),
 		promptSnippet: `Search file contents only inside permitted paths from ${configLabel(rules)}.`,
-		promptGuidelines: createPromptGuidelines("grep", rules),
 	});
 
 	pi.registerTool({
 		...lsTool,
 		description: buildToolDescription("List directory contents.", "ls", rules),
 		promptSnippet: `List directories only inside permitted paths from ${configLabel(rules)}.`,
-		promptGuidelines: createPromptGuidelines("ls", rules),
 	});
 
 	const activeToolNames = new Set(pi.getActiveTools());
@@ -855,6 +851,11 @@ export default function scopedGuardedTools(pi: ExtensionAPI) {
 	});
 
 	pi.on("before_agent_start", async (event, ctx) => {
+		await writeFileSync(
+			path.join(ctx.cwd, "DEBUG_FULL_PROMPT.txt"),
+			event.systemPrompt,
+		);
+
 		try {
 			const rules = await refreshOverrides(ctx.cwd);
 			if (!rules) return undefined;

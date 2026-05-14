@@ -1,15 +1,17 @@
-## Memory
+## General
 
+- Avoid reading too many files at once. You WILL run out of context.
+- When a plan is running, do not stop and wait for user feedback.
+- Work in small chunks to allow auto-compaction to do its work to keep your context clean.
+
+## Memory
 Read MEMORY.md at the start of every session if it exists.
 
 ## Session History
+Use `vcc_recall` ONLY when:
+- The user explicitly asks about past work
+- You hit a specific blocker that cannot be resolved from current files
 
-If you need context from earlier in this session that may have been compacted away, use the `vcc_recall` tool to search session history. It supports regex and multi-word queries.
-
-Examples:
-- `vcc_recall({ query: "auth token" })` — search for relevant entries
-- `vcc_recall({ query: "hook|inject" })` — regex search
-- `vcc_recall()` — browse last 25 entries
-- `vcc_recall({ expand: [41, 42] })` — get full content for specific entries
-
-Use this proactively when resuming after a compaction or when you're unsure what was done earlier.
+Do NOT call vcc_recall, session_search, or session_read proactively.
+Do NOT read files speculatively before identifying the exact task.
+Start with the minimum context needed and fetch more only if blocked.
